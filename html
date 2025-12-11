@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Healthy-Help — Nutrition Suggestions</title>
+  <meta name="description" content="Educational site that suggests healthy foods and a simple meal plan for common nutrient deficiencies. Not medical advice." />
+
+  <style>
+    :root{
+      --bg-1: #e8f7ff;
+      --bg-2: #f6fbff;
+      --card: #ffffff;
+      --accent: #2b7a78;
+      --muted: #6b7280;
+      --glass: rgba(255,255,255,0.72);
+      --max-width: 1000px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(180deg,var(--bg-1), var(--bg-2) 70%);
+      padding:28px 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .container{
+      width:100%;
+      max-width:var(--max-width);
+      background:var(--card);
+      border-radius:14px;
+      box-shadow:0 8px 30px rgba(15,23,42,0.08);
+      padding:26px;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+    }
+
+    header{grid-column:1/-1; display:flex; gap:16px; align-items:center}
+    .logo{background:var(--accent); color:white; font-weight:700; padding:12px 14px; border-radius:10px; font-size:1.05rem}
+    h1{margin:0; font-size:1.35rem}
+    p.lead{margin:0; color:var(--muted); font-size:0.95rem}
+
+    main{padding-top:6px}
+    aside{padding:16px; background:linear-gradient(180deg, rgba(43,122,120,0.04), rgba(43,122,120,0.02)); border-radius:10px}
+
+    form{display:flex; flex-direction:column; gap:12px}
+    label{font-size:0.92rem; color:#0f172a}
+    input[type="text"], select{padding:10px 12px; border-radius:8px; border:1px solid #e6eef0; font-size:0.95rem; width:100%}
+    .row{display:flex; gap:10px}
+    .row > *{flex:1}
+
+    button.primary{background:var(--accent); color:white; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600}
+    button.secondary{background:#e6eef0;color:#0f172a;border:none;padding:10px 14px;border-radius:10px;cursor:pointer}
+
+    .result-card{background:var(--glass); padding:14px; border-radius:10px; border:1px solid rgba(15,23,42,0.04)}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{background:white; padding:8px 10px; border-radius:999px; font-size:0.85rem; box-shadow:0 4px 14px rgba(12,16,20,0.03)}
+
+    .foods{display:grid; grid-template-columns:repeat(2, 1fr); gap:10px}
+    .food-item{background:white; padding:10px; border-radius:8px; border:1px solid rgba(15,23,42,0.03)}
+
+    footer{grid-column:1/-1; margin-top:8px; color:var(--muted); font-size:0.85rem}
+
+    .hero {
+      width:100%;
+      border-radius:10px;
+      overflow:hidden;
+      display:block;
+      margin-bottom:12px;
+    }
+    .hero img{ width:100%; height:auto; display:block; object-fit:cover; }
+
+    /* responsive */
+    @media (max-width:980px){
+      .container{grid-template-columns:1fr; padding:18px}
+      aside{order:2}
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="application">
+    <header>
+      <div class="logo" aria-hidden>HH</div>
+      <div>
+        <h1>Healthy-Help</h1>
+        <p class="lead">Educational food suggestions for common nutrient deficiencies. <strong>Not medical advice.</strong></p>
+      </div>
+    </header>
+
+    <main>
+      <div class="hero" aria-hidden>
+        <!-- Put an image file at public/images/nutrition.jpg -->
+        <img src="images/nutrition.jpg" alt="A colourful selection of healthy foods — fruits, vegetables, grains and nuts">
+      </div>
+
+      <section aria-labelledby="form-heading">
+        <h2 id="form-heading" style="font-size:1.05rem;margin:0 0 8px 0">Tell us a bit about yourself</h2>
+        <form id="deficiency-form" autocomplete="off" novalidate>
+          <label for="name">Name (optional)</label>
+          <input id="name" name="name" type="text" placeholder="How would you like us to call you?">
+
+          <label for="deficiency">Choose the nutrient deficiency</label>
+          <select id="deficiency" name="deficiency" required>
+            <option value="">— select a nutrient —</option>
+            <option value="iron">Iron</option>
+            <option value="calcium">Calcium</option>
+            <option value="vitaminD">Vitamin D</option>
+            <option value="vitaminC">Vitamin C</option>
+            <option value="vitaminB12">Vitamin B12</option>
+            <option value="magnesium">Magnesium</option>
+            <option value="iodine">Iodine</option>
+          </select>
+
+          <div class="row">
+            <div>
+              <label for="age">Age range (optional)</label>
+              <select id="age" name="age">
+                <option value="">Not specified</option>
+                <option value="child">Child (0–12)</option>
+                <option value="teen">Teen (13–17)</option>
+                <option value="adult">Adult (18–64)</option>
+                <option value="senior">Senior (65+)</option>
+              </select>
+            </div>
+            <div>
+              <label for="diet">Diet preference (optional)</label>
+              <select id="diet" name="diet">
+                <option value="any">No preference</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+                <option value="pescatarian">Pescatarian</option>
+                <option value="omnivore">Omnivore</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px; margin-top:6px">
+            <button type="submit" class="primary">Get healthy-food suggestions</button>
+            <button type="button" id="clear-btn" class="secondary">Clear</button>
+          </div>
+        </form>
+
+        <div id="output" style="margin-top:16px; display:none" aria-live="polite" tabindex="-1"></div>
+      </section>
+
+      <section style="margin-top:12px">
+        <div class="result-card">
+          <strong>Important:</strong>
+          <p style="margin:8px 0 0 0; color:var(--muted)">This website provides general, educational nutrition information only. It does <em>not</em> diagnose or treat conditions. Please consult a qualified healthcare professional for personalized advice.</p>
+        </div>
+      </section>
+    </main>
+
+    <aside>
+      <h3 style="margin-top:0">How this works</h3>
+      <p style="color:var(--muted); font-size:0.95rem">Choose a nutrient and (optionally) your age and diet style. The site will show common foods that are good sources of the chosen nutrient and a gentle sample day-of-meals that emphasize those foods. All suggestions are educational.</p>
+
+      <div style="height:12px"></div>
+
+      <div class="result-card">
+        <h4 style="margin:0 0 8px 0">Quick tips</h4>
+        <ul style="margin:0; padding-left:18px; color:var(--muted)">
+          <li>Prefer whole foods (fruits, vegetables, whole grains, legumes, dairy or alternatives).</li>
+          <li>Combine iron-rich plant foods with vitamin C sources to help absorption (educational tip).</li>
+          <li>Variety across food groups helps meet many nutrient needs.</li>
+        </ul>
+      </div>
+    </aside>
+
+    <footer>
+      <div style="display:flex; justify-content:space-between; gap:12px; align-items:center">
+        <div>Created for learning — no medical claims.</div>
+        <div style="color:var(--muted)">© Healthy-Help</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // ====== Data map: nutrient => foods & sample plan (educational only) ======
+    const DATA = {
+      iron: {
+        title: 'Iron',
+        foods: ['Red lentils', 'Chickpeas', 'Spinach', 'Tofu', 'Red meat (if chosen)', 'Pumpkin seeds'],
+        tips: ['Plant-based iron (non-heme) is best paired with vitamin C foods (like citrus, peppers) to help absorption — educational tip.'],
+        sample: [
+          {meal:'Breakfast', items:["Oat porridge with pumpkin seeds and sliced banana"]},
+          {meal:'Lunch', items:["Lentil curry with spinach and tomato salad (vitamin C source)"]},
+          {meal:'Snack', items:["Apple slices with almond butter"]},
+          {meal:'Dinner', items:["Tofu stir-fry with bell peppers and brown rice"]}
+        ]
+      },
+
+      calcium: {
+        title: 'Calcium',
+        foods: ['Yogurt or fortified plant milk', 'Cheese (if available)', 'Kale', 'Tofu set with calcium', 'Almonds', 'Sardines (with bones)'],
+        tips: ['Calcium is commonly found in dairy and some fortified plant milks and leafy greens.'],
+        sample: [
+          {meal:'Breakfast', items:["Fortified plant milk smoothie with banana and spinach"]},
+          {meal:'Lunch', items:["Kale & chickpea salad with tahini dressing"]},
+          {meal:'Snack', items:["Yogurt (or fortified soy yogurt) with berries"]},
+          {meal:'Dinner', items:["Baked salmon with steamed broccoli and quinoa"]}]
+      },
+
+      vitaminD: {
+        title: 'Vitamin D',
+        foods: ['Fatty fish (salmon, mackerel)', 'Fortified milk/plant milk', 'Egg yolks', 'Mushrooms exposed to sunlight'],
+        tips: ['Vitamin D is also produced when skin is exposed to sunlight; food sources alone can be limited.'],
+        sample: [
+          {meal:'Breakfast', items:["Scrambled eggs with mushrooms on wholegrain toast"]},
+          {meal:'Lunch', items:["Salmon salad with mixed greens"]},
+          {meal:'Snack', items:["Yogurt and orange slices"]},
+          {meal:'Dinner', items:["Mushroom risotto with a side of sautéed spinach"]}]
+      },
+
+      vitaminC: {
+        title: 'Vitamin C',
+        foods: ['Oranges', 'Kiwifruit', 'Bell peppers', 'Strawberries', 'Broccoli', 'Tomatoes'],
+        tips: ['Vitamin C is found in many fruits and vegetables and helps overall immune health as part of a balanced diet (educational).'],
+        sample: [
+          {meal:'Breakfast', items:["Fruit bowl (orange, kiwi, berries) with yogurt"]},
+          {meal:'Lunch', items:["Grilled chicken & pepper salad"]},
+          {meal:'Snack', items:["Carrot sticks and hummus"]},
+          {meal:'Dinner', items:["Tomato & vegetable soup with wholegrain bread"]}]
+      },
+
+      vitaminB12: {
+        title: 'Vitamin B12',
+        foods: ['Shellfish and fish', 'Eggs', 'Dairy', 'Fortified plant milks and cereals'],
+        tips: ['B12 is naturally abundant in animal foods; vegans may rely on fortified foods — educational info.'],
+        sample: [
+          {meal:'Breakfast', items:["Fortified cereal with milk or fortified plant milk"]},
+          {meal:'Lunch', items:["Egg salad sandwich on wholegrain bread"]},
+          {meal:'Snack', items:["Greek yogurt (or fortified alternative) and nuts"]},
+          {meal:'Dinner', items:["Grilled fish with steamed vegetables and potatoes"]}]
+      },
+
+      magnesium: {
+        title: 'Magnesium',
+        foods: ['Leafy greens', 'Whole grains', 'Nuts and seeds', 'Beans', 'Dark chocolate (small amounts)'],
+        tips: ['Magnesium-rich foods are often part of whole-food based diets.'],
+        sample: [
+          {meal:'Breakfast', items:["Wholegrain toast with almond butter and banana"]},
+          {meal:'Lunch', items:["Quinoa salad with black beans and mixed greens"]},
+          {meal:'Snack', items:["Handful of mixed nuts"]},
+          {meal:'Dinner', items:["Stir-fried vegetables with tofu and brown rice"]}]
+      },
+
+      iodine: {
+        title: 'Iodine',
+        foods: ['Iodized salt (small amounts)', 'Seaweed', 'Dairy', 'Fish'],
+        tips: ['Iodine levels can vary by region and food source; use iodized salt in moderation — educational tip.'],
+        sample: [
+          {meal:'Breakfast', items:["Yogurt bowl with fruit and a sprinkle of seeds"]},
+          {meal:'Lunch', items:["Sushi-style bowl with cooked seaweed and rice"]},
+          {meal:'Snack', items:["Boiled egg and carrot sticks"]},
+          {meal:'Dinner', items:["Baked white fish with a side of steamed greens"]}]
+      }
+    };
+
+    // ====== Helpers ======
+    function escapeHtml(str){
+      if(!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function renderResult(nutrientKey, formValues){
+      const data = DATA[nutrientKey];
+      const out = document.getElementById('output');
+      out.style.display = 'block';
+      out.innerHTML = '';
+
+      const name = formValues.name ? escapeHtml(formValues.name) : 'Friend';
+
+      const title = document.createElement('h3');
+      title.textContent = `${data.title} — Educational suggestions for ${name}`;
+      out.appendChild(title);
+
+      const desc = document.createElement('p');
+      desc.style.color = 'var(--muted)';
+      desc.textContent = 'Below are common foods that are good sources of this nutrient and a gentle sample day of meals. This is general information only.';
+      out.appendChild(desc);
+
+      // Foods
+      const foodHead = document.createElement('h4');
+      foodHead.textContent = 'Common food sources';
+      out.appendChild(foodHead);
+
+      const foodsWrap = document.createElement('div');
+      foodsWrap.className = 'foods';
+      data.foods.forEach(f => {
+        const fi = document.createElement('div');
+        fi.className = 'food-item';
+        fi.textContent = f;
+        foodsWrap.appendChild(fi);
+      });
+      out.appendChild(foodsWrap);
+
+      // Tips
+      if(data.tips && data.tips.length){
+        const tipsHead = document.createElement('h4');
+        tipsHead.textContent = 'Quick educational tips';
+        out.appendChild(tipsHead);
+        const ul = document.createElement('ul');
+        ul.style.color = 'var(--muted)';
+        data.tips.forEach(t => {
+          const li = document.createElement('li');
+          li.textContent = t;
+          ul.appendChild(li);
+        });
+        out.appendChild(ul);
+      }
+
+      // Sample plan
+      const planHead = document.createElement('h4');
+      planHead.textContent = 'Sample day-of-meals (gentle ideas)';
+      out.appendChild(planHead);
+
+      data.sample.forEach(entry => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.style.marginBottom = '8px';
+        const m = document.createElement('strong');
+        m.textContent = entry.meal;
+        card.appendChild(m);
+        const ul = document.createElement('ul');
+        ul.style.margin = '6px 0 0 18px';
+        entry.items.forEach(it => {
+          const li = document.createElement('li');
+          li.textContent = it;
+          ul.appendChild(li);
+        });
+        card.appendChild(ul);
+        out.appendChild(card);
+      });
+
+      const footerNote = document.createElement('p');
+      footerNote.style.color = 'var(--muted)';
+      footerNote.style.fontSize = '0.9rem';
+      footerNote.style.marginTop = '10px';
+      footerNote.innerHTML = '<strong>Reminder:</strong> This is educational nutrition information only. For diagnosis, testing, or treatment, please consult a healthcare professional.';
+      out.appendChild(footerNote);
+
+      // Accessibility: focus on output
+      out.scrollIntoView({behavior:'smooth', block:'center'});
+      out.focus();
+    }
+
+    // ====== Form handling & backend submit ======
+    document.getElementById('deficiency-form').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const form = e.target;
+      const nutrient = form.deficiency.value;
+      const name = form.name.value.trim();
+      const age = form.age.value;
+      const diet = form.diet.value;
+
+      if(!nutrient){
+        alert('Please select a nutrient from the list.');
+        return;
+      }
+
+      const values = {name, age, diet};
+
+      // Render the educational suggestions client-side immediately
+      renderResult(nutrient, values);
+
+      // Send a safe record to the backend (for analytics/history) using JSON
+      // We intentionally only send non-sensitive fields and educational context.
+      try {
+        const payload = {
+          name: name || null,
+          deficiency: nutrient,
+          age: age || null,
+          diet: diet || null,
+          timestamp: new Date().toISOString()
+        };
+
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+
+        if(res.ok){
+          // Do nothing intrusive — optionally read a small status message
+          const json = await res.json();
+          console.log('Server:', json.message);
+        } else {
+          console.warn('Server returned an error when saving submission.');
+        }
+      } catch (err) {
+        console.error('Could not reach server to save data:', err);
+      }
+    });
+
+    // Clear button
+    document.getElementById('clear-btn').addEventListener('click', function(){
+      document.getElementById('deficiency-form').reset();
+      const out = document.getElementById('output');
+      out.style.display = 'none';
+      out.innerHTML = '';
+    });
+  </script>
+</body>
+</html>
